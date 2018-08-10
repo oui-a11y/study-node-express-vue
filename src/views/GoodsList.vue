@@ -58,6 +58,27 @@
         </div>
       </div>
     </div>
+    <model v-bind:mdShow="mdShow" v-on:close="closeModal">
+      <p slot="message">
+        请先登录,否则无法加入到购物车中!
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="mdShow = false">关闭</a>
+      </div>
+    </model>
+    <model v-bind:mdShow="mdShowCart" v-on:close="closeModal">
+      <p slot="message">
+        <svg class="icon-status-ok">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-status-ok"></use>
+        </svg>
+        <span>加入购物车成!</span>
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="mdShowCart = false">继续购物</a>
+        <router-link class="btn btn--m btn--red" href="javascript:;" to="/cart">查看购物车</router-link>
+      </div>
+    </model>
+    <div class="md-overlay" v-show="overLayFlag" @click.stop="closePop"></div>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -177,19 +198,30 @@
         that.getGoodsList();
       },
       addCart(productId){
+        var that = this;
         axios.post('/goods/addCart',{
           productId:productId
         }).then((response)=>{
           let res = response.data;
+          if(res.status == '0'){
+            that.mdShowCart = true;
+          }else{
+            that.mdShow = true;
+          }
           console.log('success');
         })
-      }
+      },
+      closeModal() {
+        this.mdShow = false;
+        this.mdShowCart = false;
+      },
+
     },
     components: {
       NavHeader,
       NavBread,
       NavFooter,
       Model
-    }
+    },
   }
 </script>
