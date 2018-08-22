@@ -131,8 +131,25 @@
     mounted() {
       var that = this;
       that.getGoodsList();
+      that.pro();
     },
     methods: {
+      pro(){
+        var that = this;
+        var param = {
+          page: that.page,
+          pageSize: that.pageSize,
+          sort: that.sortFlag ? 1 : -1,
+          startPrice: that.priceData.startPrice,
+          endPrice: that.priceData.endPrice
+        };
+
+        that.$getAjax('/goods/list',param).then((res)=>{
+          console.log(res);
+        }).catch((err)=>{
+          console.log(err);
+        })
+      },
       getGoodsList(flag) {
         var that = this;
         var param = {
